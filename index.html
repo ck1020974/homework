@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學習歷程檔案製作</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        .input-section {
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .image-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            max-width: 620px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        .image-wrapper {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            overflow: hidden;
+        }
+        .background-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: left center;
+        }
+        .overlay-image {
+            position: absolute;
+            height: auto;
+            object-fit: cover;
+        }
+        /* 第一張圖片的專屬樣式 */
+        #overlay1.overlay-image {
+            width: 30%;  /* 從 33% 改為 30% */
+            top: 40%;
+            left: 16.5%;
+            transform: translate(-50%, -50%);
+            aspect-ratio: auto;
+        }
+        /* 第二、三張圖片的樣式 */
+        #overlay2.overlay-image,
+        #overlay3.overlay-image {
+            width: 43%;
+            aspect-ratio: 5/4;
+        }
+        #overlay2.overlay-image {
+            top: 51%;
+            left: 27%;
+            transform: translate(-50%, -50%);
+        }
+        #overlay3.overlay-image {
+            top: 51%;
+            left: 73%;
+            transform: translate(-50%, -50%);
+        }
+        .text-overlay {
+            position: absolute;
+            color: black;
+            font-size: 12px;
+            text-align: left;
+            width: 80%;
+            padding: 5px;
+            transform: translate(-50%, -50%);
+            font-family: 'Noto Serif TC', '莞荽', 'Source Han Serif TC', serif;
+        }
+        .text-overlay.top {
+            top: 42.5%;
+            left: 67%;
+            transform: translate(-50%, -50%);
+            width: 55%;
+            font-family: 'Noto Serif TC', '莞荽', 'Source Han Serif TC', serif;
+        }
+        .text-overlay.bottom {
+            top: 83%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            font-family: 'Noto Serif TC', '莞荽', 'Source Han Serif TC', serif;
+        }
+        .subtitle {
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            font-weight: bold;
+            text-align: center;
+            width: 80%;
+            padding: 5px;
+            transform: translate(-50%, -50%);
+        }
+        .subtitle.top {
+            top: 25%;
+            left: 46.5%;
+            transform: translate(-50%, -50%);
+        }
+        .subtitle.bottom {
+            top: 67.5%;
+            left: 20%;
+            transform: translate(-50%, -50%);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .output-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .output-button {
+            padding: 12px 24px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .output-button:hover {
+            background-color: #45a049;
+        }
+        @media (max-width: 600px) {
+            .image-container {
+                flex-direction: column;
+            }
+            .image-wrapper {
+                width: 100%;
+            }
+        }
+        .title-section {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            background-color: #ffffff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        
+        .title-section label {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .title-input-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .title-input {
+            width: 80%;
+            padding: 12px;
+            font-size: 1.2em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+            background-color: #ffffff;
+        }
+        
+        .title-input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        
+        .title-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+        }
+        
+        .line-break-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .line-break-btn:hover {
+            background-color: #45a049;
+        }
+        
+        .grid-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .grid-item {
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        .char-counter {
+            text-align: right;
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .text-area {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            box-sizing: border-box;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        /* 第一段和第二段文字的輸入框 */
+        .text-area.large {
+            min-height: 180px;  /* 增加最小高度 */
+            max-height: 300px;  /* 增加最大高度 */
+        }
+        
+        /* 第三段文字的輸入框 */
+        .text-area.small {
+            min-height: 80px;
+            max-height: 150px;
+        }
+        
+        .upload-box {
+            border: 2px dashed #ccc;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 150px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .upload-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .title-display {
+            position: absolute;
+            top: 12%;  /* 從 10% 改為 12%，往下移動 */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #2c3e50;
+            font-family: 'Noto Serif TC', 'Source Han Serif TC', serif;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            width: 80%;
+            padding: 5px;
+            z-index: 10;
+            white-space: pre-line;
+            line-height: 1.4;
+            letter-spacing: 4px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .class-name-input {
+            width: 40%;  /* 與標題輸入框同寬 */
+            padding: 12px;
+            font-size: 1.2em;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+        
+        .class-name-display {
+            position: absolute;
+            top: 60%;
+            left: 17%;
+            transform: translate(-50%, -50%);
+            color: #2c3e50;
+            font-family: 'Noto Serif TC', 'Source Han Serif TC', serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            padding: 5px;
+            z-index: 10;
+            writing-mode: horizontal-tb;
+            letter-spacing: 2px;
+        }
+        
+        .class-name-display.small {
+            font-size: 11px;  /* 較小的字體大小 */
+        }
+        /* 第一段副標題 */
+        #subtitle1-display.subtitle.top {
+            top: 26%;
+            left: 50.5%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 第三段副標題 */
+        #subtitle3-display.subtitle.top {
+            top: 8.5%;
+            left: 25.5%;
+            transform: translate(-50%, -50%);
+        }
+        .style-buttons {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);  /* 改為 10 欄 */
+            gap: 8px;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            margin: -10px auto 20px;
+            padding: 20px 30px;  /* 調整內邊距 */
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .style-btn {
+            padding: 8px 6px;  /* 縮小內邊距 */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;  /* 稍微縮小字體 */
+            transition: all 0.3s ease;
+            width: 60px;  /* 縮小按鈕寬度 */
+            margin: 0 auto;
+            min-width: unset;
+        }
+
+        .style-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .style-btn:active {
+            transform: translateY(0);
+        }
+
+        .style-btn.active {
+            background-color: #2E7D32;  /* 深綠色 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .style-btn.disabled {
+            background-color: #cccccc;  /* 灰色背景 */
+            cursor: not-allowed;  /* 禁用游標 */
+            opacity: 0.6;  /* 降低透明度 */
+            pointer-events: none;  /* 禁止點擊事件 */
+        }
+
+        .style-btn.disabled:hover {
+            background-color: #cccccc;
+            transform: none;
+        }
+        .notice-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            padding: 10px;
+            margin: 10px auto;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 4px;
+            width: 620px;
+            box-sizing: border-box;
+        }
+        .text-overlay.top#text3 {
+            width: 90%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            top: 22%;
+            font-family: 'Noto Serif TC', '莞荽', 'Source Han Serif TC', serif;
+        }
+        .text-overlay.bottom#text4 {
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            font-family: 'Noto Serif TC', '莞荽', 'Source Han Serif TC', serif;
+        }
+        .role-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .role-btn {
+            padding: 6px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .role-btn:hover {
+            background-color: #45a049;
+        }
+
+        .role-btn.active {
+            background-color: #2E7D32;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .role-button-section {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            padding: 15px 25px;  /* 增加左右內邊距 */
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            gap: 12px;  /* 調整按鈕間距 */
+            justify-content: flex-start;  /* 改為靠左對齊 */
+        }
+
+        .role-btn {
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            min-width: 80px;  /* 確保按鈕寬度一致 */
+            text-align: center;  /* 文字置中 */
+        }
+
+        .role-btn:hover {
+            background-color: #45a049;
+        }
+
+        .role-btn.active {
+            background-color: #2E7D32;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>學習歷程製作站</h1>
+
+        <!-- 標題輸入區 -->
+        <div class="title-section">
+            <label for="main-title">請輸入標題</label>
+            <div class="title-input-container">
+                <input type="text" id="main-title" class="title-input" placeholder="請輸入標題...">
+                <div class="title-controls">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="autoBreakCheckbox" onchange="toggleAutoBreak()">
+                        自動換行
+                    </label>
+                </div>
+            </div>
+            <!-- 新增班級姓名輸入區 -->
+            <div class="class-name-container" style="margin-top: 15px;">
+                <label for="class-name">班級姓名</label>
+                <input type="text" id="class-name" class="class-name-input" placeholder="請輸入班級姓名...">
+            </div>
+        </div>
+
+        <!-- 在 grid-section 之前新增角色按鈕區域 -->
+        <div class="role-button-section">
+            <button class="role-btn" onclick="selectRole('演出組')">演出組</button>
+            <button class="role-btn" onclick="selectRole('道具組')">道具組</button>
+            <button class="role-btn" onclick="selectRole('幕後組')">幕後組</button>
+        </div>
+
+        <!-- 副標題輸入區 -->
+        <div class="grid-section">
+            <div class="grid-item">
+                <label for="subtitle1">第一段副標題</label>
+                <input type="text" id="subtitle1" maxlength="8" placeholder="請輸入副標題">
+                <div class="char-counter">0/8</div>
+            </div>
+            <div class="grid-item">
+                <label for="subtitle2">第二段副標題</label>
+                <input type="text" id="subtitle2" maxlength="8" placeholder="請輸入副標題">
+                <div class="char-counter">0/8</div>
+            </div>
+            <div class="grid-item">
+                <label for="subtitle3">第三段副標題</label>
+                <input type="text" id="subtitle3" maxlength="10" placeholder="請輸入副標題">
+                <div class="char-counter">0/10</div>
+            </div>
+        </div>
+
+        <!-- 文字輸入區 -->
+        <div class="grid-section">
+            <div class="grid-item">
+                <label for="text1">第一段文字</label>
+                <textarea id="text1" class="text-area large" placeholder="請輸入第一段文字..." maxlength="90"></textarea>
+                <div class="char-counter">0/90</div>
+            </div>
+            <div class="grid-item">
+                <label for="text2">第二段文字</label>
+                <textarea id="text2" class="text-area large" placeholder="請輸入第二段文字..." maxlength="130"></textarea>
+                <div class="char-counter">0/130</div>
+            </div>
+            <div class="grid-item">
+                <label for="text3">第三段文字（上）</label>
+                <textarea id="text3" class="text-area small" placeholder="請輸入第三段上方文字..." maxlength="130"></textarea>
+                <div class="char-counter">0/130</div>
+                <label for="text4" style="margin-top: 10px;">第三段文字（下）</label>
+                <textarea id="text4" class="text-area small" placeholder="請輸入第三段下方文字..." maxlength="130"></textarea>
+                <div class="char-counter">0/130</div>
+            </div>
+        </div>
+
+        <!-- 圖片上傳區 -->
+        <div class="grid-section">
+            <div class="grid-item">
+                <label>上傳第一張圖片</label>
+                <div class="upload-box">
+                    <button class="upload-btn" onclick="document.getElementById('upload1').click()">選擇圖片</button>
+                    <input type="file" id="upload1" accept="image/*" style="display: none;">
+                    <img id="preview1" class="preview-image">
+                </div>
+            </div>
+            <div class="grid-item">
+                <label>上傳第二張圖片</label>
+                <div class="upload-box">
+                    <button class="upload-btn" onclick="document.getElementById('upload2').click()">選擇圖片</button>
+                    <input type="file" id="upload2" accept="image/*" style="display: none;">
+                    <img id="preview2" class="preview-image">
+                </div>
+            </div>
+            <div class="grid-item">
+                <label>上傳第三張圖片</label>
+                <div class="upload-box">
+                    <button class="upload-btn" onclick="document.getElementById('upload3').click()">選擇圖片</button>
+                    <input type="file" id="upload3" accept="image/*" style="display: none;">
+                    <img id="preview3" class="preview-image">
+                </div>
+            </div>
+        </div>
+
+        <!-- 修改風格選擇按鈕區的程式碼 -->
+        <div class="style-buttons">
+            <button class="style-btn active" data-style="1" onclick="changeStyle(1)">風格1</button>
+            <button class="style-btn" data-style="2" onclick="changeStyle(2)">風格2</button>
+            <button class="style-btn" data-style="3" onclick="changeStyle(3)">風格3</button>
+            <button class="style-btn" data-style="4" onclick="changeStyle(4)">風格4</button>
+            <button class="style-btn" data-style="5" onclick="changeStyle(5)">風格5</button>
+            <button class="style-btn" data-style="6" onclick="changeStyle(6)">風格6</button>
+            <button class="style-btn" data-style="7" onclick="changeStyle(7)">風格7</button>
+            <button class="style-btn" data-style="8" onclick="changeStyle(8)">風格8</button>
+            <button class="style-btn disabled" data-style="9" onclick="changeStyle(9)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="10" onclick="changeStyle(10)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="11" onclick="changeStyle(11)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="12" onclick="changeStyle(12)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="13" onclick="changeStyle(13)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="14" onclick="changeStyle(14)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="15" onclick="changeStyle(15)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="16" onclick="changeStyle(16)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="17" onclick="changeStyle(17)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="18" onclick="changeStyle(18)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="19" onclick="changeStyle(19)" disabled>開發中</button>
+            <button class="style-btn disabled" data-style="20" onclick="changeStyle(20)" disabled>開發中</button>
+        </div>
+
+        <div class="notice-text">
+            ⚠️ 預覽區僅供參考，實際輸出成品可能會有些微差異，請以最終輸出檔案為準
+        </div>
+
+        <div class="image-container">
+            <div class="image-wrapper">
+                <img src="小花版型1-1.png" alt="小花版型1-1" class="background-image" onerror="this.src='fallback.png'">
+                <div class="title-display"></div>
+                <div class="class-name-display"></div>
+                <img id="overlay1" class="overlay-image top" style="display: none;">
+                <div class="subtitle top" id="subtitle1-display"></div>
+                <div class="text-overlay top" id="text1"></div>
+                <div class="subtitle bottom" id="subtitle2-display"></div>
+                <div class="text-overlay bottom" id="text2"></div>
+            </div>
+            <div class="image-wrapper">
+                <img src="小花版型1-2.png" alt="小花版型1-2" class="background-image" onerror="this.src='fallback.png'">
+                <img id="overlay2" class="overlay-image top" style="display: none;">
+                <img id="overlay3" class="overlay-image bottom" style="display: none;">
+                <div class="subtitle top" id="subtitle3-display"></div>
+                <div class="text-overlay top" id="text3"></div>
+                <div class="text-overlay bottom" id="text4"></div>
+            </div>
+        </div>
+
+        <div class="output-section">
+            <button class="output-button" onclick="saveAsPNG()">輸出PNG</button>
+        </div>
+    </div>
+
+    <script>
+        let autoBreakEnabled = false;
+
+        function toggleAutoBreak() {
+            autoBreakEnabled = document.getElementById('autoBreakCheckbox').checked;
+            if (autoBreakEnabled) {
+                applyAutoBreak();
+            } else {
+                // 取消換行，恢復原本的文字
+                const titleInput = document.getElementById('main-title');
+                const title = titleInput.value.replace(/\n/g, '');
+                titleInput.value = title;
+                document.querySelector('.title-display').innerHTML = title;
+            }
+        }
+
+        function applyAutoBreak() {
+            const titleInput = document.getElementById('main-title');
+            const title = titleInput.value.replace(/\n/g, ''); // 移除現有的換行符
+            
+            if (title.length > 10) {
+                const midPoint = Math.ceil(title.length / 2);
+                const newTitle = title.slice(0, midPoint) + '\n' + title.slice(midPoint);
+                titleInput.value = newTitle;
+                document.querySelector('.title-display').innerHTML = newTitle.replace(/\n/g, '<br>');
+            }
+        }
+
+        // 修改標題輸入的事件監聽器
+        document.getElementById('main-title').addEventListener('input', function(e) {
+            if (autoBreakEnabled) {
+                applyAutoBreak();
+            } else {
+                const title = e.target.value;
+                document.querySelector('.title-display').innerHTML = title.replace(/\n/g, '<br>');
+            }
+        });
+
+        function cropImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // 計算 5:4 比例的尺寸
+                    let width = img.width;
+                    let height = (width / 5) * 4;
+                    
+                    // 如果原始圖片高度小於計算出的高度，則以高度為基準
+                    if (height > img.height) {
+                        height = img.height;
+                        width = (height / 4) * 5;
+                    }
+                    
+                    // 設定 canvas 大小
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // 計算裁剪位置（從中心裁剪）
+                    const x = (img.width - width) / 2;
+                    const y = (img.height - height) / 2;
+                    
+                    // 繪製裁剪後的圖片
+                    ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+                    
+                    // 返回裁剪後的圖片
+                    callback(canvas.toDataURL('image/png'));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 處理第一張圖片上傳
+        document.getElementById('upload1').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('overlay1');
+                    const preview = document.getElementById('preview1');
+                    img.src = e.target.result;
+                    preview.src = e.target.result;
+                    img.style.display = 'block';
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('upload2').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                cropImage(file, function(croppedImage) {
+                    const img = document.getElementById('overlay2');
+                    const preview = document.getElementById('preview2');
+                    img.src = croppedImage;
+                    preview.src = croppedImage;
+                    img.style.display = 'block';
+                    preview.style.display = 'block';
+                });
+            }
+        });
+
+        document.getElementById('upload3').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                cropImage(file, function(croppedImage) {
+                    const img = document.getElementById('overlay3');
+                    const preview = document.getElementById('preview3');
+                    img.src = croppedImage;
+                    preview.src = croppedImage;
+                    img.style.display = 'block';
+                    preview.style.display = 'block';
+                });
+            }
+        });
+
+        // 即時更新文字
+        document.getElementById('text1').addEventListener('input', function(e) {
+            const text = e.target.value;
+            const counter = this.nextElementSibling;
+            
+            // 更新字數計數
+            counter.textContent = `${text.length}/90`;
+            
+            // 限制輸入不超過90個字
+            if (text.length > 90) {
+                e.target.value = text.slice(0, 90);
+                return;
+            }
+            
+            // 直接更新顯示的文字，不做換行處理
+            document.querySelector('.text-overlay.top#text1').textContent = text;
+        });
+
+        document.getElementById('text2').addEventListener('input', function(e) {
+            const text = e.target.value;
+            const counter = this.nextElementSibling;
+            
+            // 更新字數計數
+            counter.textContent = `${text.length}/130`;
+            
+            // 限制輸入不超過130個字
+            if (text.length > 130) {
+                e.target.value = text.slice(0, 130);
+                return;
+            }
+            
+            // 更新顯示的文字
+            document.querySelector('.text-overlay.bottom#text2').textContent = text;
+        });
+
+        document.getElementById('text3').addEventListener('input', function(e) {
+            const text = e.target.value;
+            const counter = this.nextElementSibling;
+            
+            // 更新字數計數
+            counter.textContent = `${text.length}/130`;
+            
+            // 限制輸入不超過130個字
+            if (text.length > 130) {
+                e.target.value = text.slice(0, 130);
+                return;
+            }
+            
+            // 更新顯示的文字
+            document.querySelector('.text-overlay.top#text3').textContent = text;
+        });
+
+        document.getElementById('text4').addEventListener('input', function(e) {
+            const text = e.target.value;
+            const counter = this.nextElementSibling;
+            
+            // 更新字數計數
+            counter.textContent = `${text.length}/130`;
+            
+            // 限制輸入不超過130個字
+            if (text.length > 130) {
+                e.target.value = text.slice(0, 130);
+                return;
+            }
+            
+            // 更新顯示的文字
+            document.querySelector('.text-overlay.bottom#text4').textContent = text;
+        });
+
+        // 即時更新副標題和字數計數
+        document.querySelectorAll('input[maxlength]').forEach(input => {
+            const counter = input.nextElementSibling;
+            
+            input.addEventListener('input', function() {
+                // 更新字數計數
+                const count = this.value.length;
+                const maxLength = this.getAttribute('maxlength');
+                counter.textContent = `${count}/${maxLength}`;
+                
+                // 更新對應的副標題顯示
+                const displayId = this.id + '-display';
+                document.getElementById(displayId).textContent = this.value;
+            });
+        });
+
+        function saveAsPNG() {
+            const imageWrappers = document.querySelectorAll('.image-wrapper');
+            
+            imageWrappers.forEach((wrapper, index) => {
+                html2canvas(wrapper, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null,
+                    logging: false,
+                    onclone: function(clonedDoc) {
+                        const clonedWrapper = clonedDoc.querySelector('.image-wrapper');
+                        if (clonedWrapper) {
+                            // 確保所有文字元素的樣式一致
+                            const textElements = clonedWrapper.querySelectorAll('.text-overlay, .subtitle, .title-display, .class-name-display');
+                            textElements.forEach(element => {
+                                element.style.webkitFontSmoothing = 'antialiased';
+                                element.style.backfaceVisibility = 'hidden';
+                            });
+                        }
+                    }
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `圖片${index + 1}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.click();
+                });
+            });
+        }
+
+        document.getElementById('class-name').addEventListener('input', function(e) {
+            const className = e.target.value;
+            const classNameDisplay = document.querySelector('.class-name-display');
+            classNameDisplay.textContent = className;
+            
+            // 檢查字數並調整字體大小
+            if (className.length > 7) {
+                classNameDisplay.classList.add('small');
+            } else {
+                classNameDisplay.classList.remove('small');
+            }
+        });
+
+        function changeStyle(styleNumber) {
+            // 移除所有風格按鈕的活動狀態
+            document.querySelectorAll('.style-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 設定當前選中的風格按鈕
+            document.querySelector(`.style-btn[data-style="${styleNumber}"]`).classList.add('active');
+            
+            // 更新背景圖片
+            const firstImage = document.querySelector('.image-wrapper:first-child .background-image');
+            const secondImage = document.querySelector('.image-wrapper:last-child .background-image');
+            
+            switch(styleNumber) {
+                case 1:
+                    firstImage.src = "小花版型1-1.png";
+                    secondImage.src = "小花版型1-2.png";
+                    break;
+                case 2:
+                    firstImage.src = "版型2-1.png";
+                    secondImage.src = "版型2-2.png";
+                    break;
+                case 3:
+                    firstImage.src = "版型3-1.png";
+                    secondImage.src = "版型3-2.png";
+                    break;
+                case 4:
+                    firstImage.src = "版型4-1.png";
+                    secondImage.src = "版型4-2.png";
+                    break;
+                case 5:
+                    firstImage.src = "版型5-1.png";
+                    secondImage.src = "版型5-2.png";
+                    break;
+                case 6:
+                    firstImage.src = "版型6-1.png";
+                    secondImage.src = "版型6-2.png";
+                    break;
+                case 7:
+                    firstImage.src = "版型7-1.png";
+                    secondImage.src = "版型7-2.png";
+                    break;
+                case 8:
+                    firstImage.src = "版型8-1.png";
+                    secondImage.src = "版型8-2.png";
+                    break;
+                // 新增的風格
+                case 9:
+                    firstImage.src = "版型9-1.png";
+                    secondImage.src = "版型9-2.png";
+                    break;
+                case 10:
+                    firstImage.src = "版型10-1.png";
+                    secondImage.src = "版型10-2.png";
+                    break;
+                case 11:
+                    firstImage.src = "版型11-1.png";
+                    secondImage.src = "版型11-2.png";
+                    break;
+                case 12:
+                    firstImage.src = "版型12-1.png";
+                    secondImage.src = "版型12-2.png";
+                    break;
+                case 13:
+                    firstImage.src = "版型13-1.png";
+                    secondImage.src = "版型13-2.png";
+                    break;
+                case 14:
+                    firstImage.src = "版型14-1.png";
+                    secondImage.src = "版型14-2.png";
+                    break;
+                case 15:
+                    firstImage.src = "版型15-1.png";
+                    secondImage.src = "版型15-2.png";
+                    break;
+                case 16:
+                    firstImage.src = "版型16-1.png";
+                    secondImage.src = "版型16-2.png";
+                    break;
+                case 17:
+                    firstImage.src = "版型17-1.png";
+                    secondImage.src = "版型17-2.png";
+                    break;
+                case 18:
+                    firstImage.src = "版型18-1.png";
+                    secondImage.src = "版型18-2.png";
+                    break;
+                case 19:
+                    firstImage.src = "版型19-1.png";
+                    secondImage.src = "版型19-2.png";
+                    break;
+                case 20:
+                    firstImage.src = "版型20-1.png";
+                    secondImage.src = "版型20-2.png";
+                    break;
+            }
+        }
+
+        // 在網頁載入時設定預設風格
+        document.addEventListener('DOMContentLoaded', function() {
+            // 設定預設風格
+            changeStyle(1);
+            
+            // 自動勾選自動換行選項
+            const autoBreakCheckbox = document.getElementById('autoBreakCheckbox');
+            autoBreakCheckbox.checked = true;
+            autoBreakEnabled = true;  // 設定自動換行狀態為開啟
+        });
+
+        function selectRole(role) {
+            // 移除所有按鈕的 active 狀態
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 將選中的按鈕設為 active
+            const selectedBtn = Array.from(document.querySelectorAll('.role-btn'))
+                .find(btn => btn.textContent === role);
+            if (selectedBtn) {
+                selectedBtn.classList.add('active');
+            }
+            
+            if (role === '演出組') {
+                // 設定第一段副標題和文字（加入兩個全形空格）
+                const subtitle1 = "參與動機與背景";
+                const text1 = "　　這次參加英語話劇比賽最深刻的體驗，就是親自站上舞台表演那一刻的感受。我決定參加這項活動，最初是希望提升自己的英語口語能力，也想透過表演挑戰自己，讓自己更有自信地面對人群。";
+                
+                // 設定第二段副標題和文字（加入兩個全形空格）
+                const subtitle2 = "排練與角色詮釋";
+                const text2 = "　　從剛拿到劇本時的陌生與不安，到反覆練習每一句台詞，逐漸掌握發音和情緒，這一路上的點滴讓我學到許多課堂上學不到的東西。特別是排練時，老師不斷提醒我們要注意語調、眼神，甚至每個動作，這些細節讓我逐漸從單純的英文背誦，轉變成真正深入角色內心的詮釋。";
+                
+                // 設定第三段副標題和文字（加入兩個全形空格）
+                const subtitle3 = "舞台上的挑戰與收穫";
+                const text3 = "　　坦白說，站在舞台上面對觀眾真的很緊張。正式表演那天，我既興奮又害怕，擔心忘詞或影響到其他人。但當聚光燈打在身上，說出第一句台詞時，卻突然覺得安心了下來，長期的排練讓一切內化成自然的反應。從那一刻起，我嘗試享受在舞台上的感覺，也真正體會到表演魅力。";
+                const text4 = "　　演出結束後，聽到觀眾熱烈的掌聲，那一刻的感動難以言喻。我意識到自己不僅英文口語能力變好了，更學會了如何勇敢地表達情感與想法。這次的經驗對我來說，不僅僅是一場比賽，更是一個讓我發現自己潛力的機會。未來，我會更勇於嘗試不同的挑戰，並且更有自信地面對任何的舞台。";
+                
+                // 填入副標題
+                document.getElementById('subtitle1').value = subtitle1;
+                document.getElementById('subtitle2').value = subtitle2;
+                document.getElementById('subtitle3').value = subtitle3;
+                
+                // 更新副標題顯示
+                document.getElementById('subtitle1-display').textContent = subtitle1;
+                document.getElementById('subtitle2-display').textContent = subtitle2;
+                document.getElementById('subtitle3-display').textContent = subtitle3;
+                
+                // 填入文字內容
+                document.getElementById('text1').value = text1;
+                document.getElementById('text2').value = text2;
+                document.getElementById('text3').value = text3;
+                document.getElementById('text4').value = text4;
+                
+                // 更新文字顯示
+                document.querySelector('.text-overlay.top#text1').textContent = text1;
+                document.querySelector('.text-overlay.bottom#text2').textContent = text2;
+                document.querySelector('.text-overlay.top#text3').textContent = text3;
+                document.querySelector('.text-overlay.bottom#text4').textContent = text4;
+                
+                // 更新所有字數計數器
+                document.querySelector('#subtitle1').nextElementSibling.textContent = `${subtitle1.length}/8`;
+                document.querySelector('#subtitle2').nextElementSibling.textContent = `${subtitle2.length}/8`;
+                document.querySelector('#subtitle3').nextElementSibling.textContent = `${subtitle3.length}/10`;
+                document.querySelector('#text1').nextElementSibling.textContent = `${text1.length}/90`;
+                document.querySelector('#text2').nextElementSibling.textContent = `${text2.length}/130`;
+                document.querySelector('#text3').nextElementSibling.textContent = `${text3.length}/130`;
+                document.querySelector('#text4').nextElementSibling.textContent = `${text4.length}/130`;
+            } else if (role === '道具組') {
+                // 設定第一段副標題和文字（加入兩個全形空格）
+                const subtitle1 = "參與動機與背景";
+                const text1 = "　　這次參加英語話劇比賽，最令我難忘的是和夥伴們一起製作道具的時光。會參加這項活動，是因為我想挑戰自己的創意與動手能力，也希望能透過實際合作，留下特別的高中回憶。";
+                
+                // 設定第二段副標題和文字（加入兩個全形空格）
+                const subtitle2 = "團隊溝通與合作";
+                const text2 = "　　一開始討論設計概念時，每個人都有不同的想法與堅持，過程中難免出現分歧。記得有次討論道具造型與配色時，意見差異明顯，但經過溝通後，大家都願意退讓一步，整合出兼顧各方想法的設計方向。這次經驗讓我深刻體會到團隊合作的重要，也明白了每個人都是不可或缺的。";
+                
+                // 設定第三段副標題和文字（加入兩個全形空格）
+                const subtitle3 = "實作挑戰與成長";
+                const text3 = "　　真正開始製作後，我才發現完成一個大型道具並不簡單。從材料準備、規劃，到組裝與上色，每個步驟都需要分工與精準溝通。我們妥善分配任務：有人畫草圖、有人採買與整理材料，有人處理結構與裝飾，我則協助流程整合與調整。過程中我們持續提醒與協調，讓工作更有效率也更有默契。";
+                const text4 = "　　我們常在放學後繼續待在教室，一做就是好幾個小時。雖然過程艱辛，但當表演當天看到親手製作的道具呈現在舞台上，那種成就感非常深刻。這次經驗讓我學會表達和解決問題，也更懂得與人溝通合作。我相信未來再面對挑戰時，這段經歷會是我重要的基礎，幫助我更從容地完成任務。";
+                
+                // 填入副標題
+                document.getElementById('subtitle1').value = subtitle1;
+                document.getElementById('subtitle2').value = subtitle2;
+                document.getElementById('subtitle3').value = subtitle3;
+                
+                // 更新副標題顯示
+                document.getElementById('subtitle1-display').textContent = subtitle1;
+                document.getElementById('subtitle2-display').textContent = subtitle2;
+                document.getElementById('subtitle3-display').textContent = subtitle3;
+                
+                // 填入文字內容
+                document.getElementById('text1').value = text1;
+                document.getElementById('text2').value = text2;
+                document.getElementById('text3').value = text3;
+                document.getElementById('text4').value = text4;
+                
+                // 更新文字顯示
+                document.querySelector('.text-overlay.top#text1').textContent = text1;
+                document.querySelector('.text-overlay.bottom#text2').textContent = text2;
+                document.querySelector('.text-overlay.top#text3').textContent = text3;
+                document.querySelector('.text-overlay.bottom#text4').textContent = text4;
+                
+                // 更新所有字數計數器
+                document.querySelector('#subtitle1').nextElementSibling.textContent = `${subtitle1.length}/8`;
+                document.querySelector('#subtitle2').nextElementSibling.textContent = `${subtitle2.length}/8`;
+                document.querySelector('#subtitle3').nextElementSibling.textContent = `${subtitle3.length}/10`;
+                document.querySelector('#text1').nextElementSibling.textContent = `${text1.length}/90`;
+                document.querySelector('#text2').nextElementSibling.textContent = `${text2.length}/130`;
+                document.querySelector('#text3').nextElementSibling.textContent = `${text3.length}/130`;
+                document.querySelector('#text4').nextElementSibling.textContent = `${text4.length}/130`;
+            } else if (role === '幕後組') {
+                // 設定第一段副標題和文字（加入兩個全形空格）
+                const subtitle1 = "參與動機與角色";
+                const text1 = "　　雖然我沒有登台演出，但這次英語話劇比賽讓我深入體驗了幕後工作的重要性。原本只是抱著協助的心情加入，沒想到在過程中發現，舞台上的每一刻精彩，其實都仰賴著幕後團隊的細心與配合。";
+                
+                // 設定第二段副標題和文字（加入兩個全形空格）
+                const subtitle2 = "執行任務與協作";
+                const text2 = "　　我參與了包括搬運與擺放道具、協助演員換裝、傳遞麥克風以及音效播放等工作。每次排練前後，我都要與同學們確認道具定位是否正確、服裝是否齊備，並協助快速轉場。這些工作看似不起眼，卻直接影響演出流暢與否，也訓練我在壓力下維持冷靜與效率。";
+                
+                // 設定第三段副標題和文字（加入兩個全形空格）
+                const subtitle3 = "不在台上，也有位置";
+                const text3 = "　　雖然我不擅長表演，也沒有特別出色的美術天分，但我仍希望能在話劇中找到自己的位置。因此，我主動承擔後勤支援的任務，盡力確保每個細節順利進行。演出當天，我在後台忙進忙出，邊移動道具，還得隨時留意舞台指令與進度。雖然手忙腳亂，但也順利完成任務，整場演出順利落幕。";
+                const text4 = "　　表演謝幕時，看著台上的演出順利完成，我雖然沒有站在聚光燈下，內心卻同樣激動與滿足。我知道，舞台上每一幕流暢自然的呈現，都有我們這群幕後人員默默的付出。這次經驗不只讓我學會負責與協作，也讓我真正理解團隊中每個角色的價值，更樂於成為那雙看不見的手。";
+                
+                // 填入副標題
+                document.getElementById('subtitle1').value = subtitle1;
+                document.getElementById('subtitle2').value = subtitle2;
+                document.getElementById('subtitle3').value = subtitle3;
+                
+                // 更新副標題顯示
+                document.getElementById('subtitle1-display').textContent = subtitle1;
+                document.getElementById('subtitle2-display').textContent = subtitle2;
+                document.getElementById('subtitle3-display').textContent = subtitle3;
+                
+                // 填入文字內容
+                document.getElementById('text1').value = text1;
+                document.getElementById('text2').value = text2;
+                document.getElementById('text3').value = text3;
+                document.getElementById('text4').value = text4;
+                
+                // 更新文字顯示
+                document.querySelector('.text-overlay.top#text1').textContent = text1;
+                document.querySelector('.text-overlay.bottom#text2').textContent = text2;
+                document.querySelector('.text-overlay.top#text3').textContent = text3;
+                document.querySelector('.text-overlay.bottom#text4').textContent = text4;
+                
+                // 更新所有字數計數器
+                document.querySelector('#subtitle1').nextElementSibling.textContent = `${subtitle1.length}/8`;
+                document.querySelector('#subtitle2').nextElementSibling.textContent = `${subtitle2.length}/8`;
+                document.querySelector('#subtitle3').nextElementSibling.textContent = `${subtitle3.length}/10`;
+                document.querySelector('#text1').nextElementSibling.textContent = `${text1.length}/90`;
+                document.querySelector('#text2').nextElementSibling.textContent = `${text2.length}/130`;
+                document.querySelector('#text3').nextElementSibling.textContent = `${text3.length}/130`;
+                document.querySelector('#text4').nextElementSibling.textContent = `${text4.length}/130`;
+            }
+        }
+    </script>
+</body>
+</html> 
