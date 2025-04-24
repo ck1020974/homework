@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>學習歷程檔案製作</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
@@ -363,14 +364,14 @@
         }
         /* 第一段副標題 */
         #subtitle1-display.subtitle.top {
-            top: 26%;
+            top: 25%;  /* 從 23% 改為 24.5% */
             left: 50.5%;
             transform: translate(-50%, -50%);
         }
 
         /* 第三段副標題 */
         #subtitle3-display.subtitle.top {
-            top: 8.5%;
+            top: 7.5%;  /* 從 6% 改為 7.5% */
             left: 25.5%;
             transform: translate(-50%, -50%);
         }
@@ -663,7 +664,7 @@
         </div>
 
         <div class="output-section">
-            <button class="output-button" onclick="saveAsPNG()">輸出PNG</button>
+            <button class="output-button" onclick="saveAsPDF()">輸出PDF</button>
         </div>
     </div>
 
@@ -872,11 +873,13 @@
             });
         });
 
-        function saveAsPNG() {
+        async function saveAsPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
             const imageWrappers = document.querySelectorAll('.image-wrapper');
             
-            imageWrappers.forEach((wrapper, index) => {
-                html2canvas(wrapper, {
+            for (let i = 0; i < imageWrappers.length; i++) {
+                const canvas = await html2canvas(imageWrappers[i], {
                     scale: 2,
                     useCORS: true,
                     allowTaint: true,
@@ -885,7 +888,6 @@
                     onclone: function(clonedDoc) {
                         const clonedWrapper = clonedDoc.querySelector('.image-wrapper');
                         if (clonedWrapper) {
-                            // 確保所有文字元素的樣式一致
                             const textElements = clonedWrapper.querySelectorAll('.text-overlay, .subtitle, .title-display, .class-name-display');
                             textElements.forEach(element => {
                                 element.style.webkitFontSmoothing = 'antialiased';
@@ -893,13 +895,26 @@
                             });
                         }
                     }
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `圖片${index + 1}.png`;
-                    link.href = canvas.toDataURL('image/png', 1.0);
-                    link.click();
                 });
-            });
+
+                // 將 canvas 轉換為圖片
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                
+                // 計算圖片在 PDF 中的尺寸和位置
+                const imgWidth = 210; // A4 寬度
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                // 如果不是第一頁，就添加新頁面
+                if (i > 0) {
+                    doc.addPage();
+                }
+                
+                // 將圖片添加到 PDF
+                doc.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight, '', 'FAST');
+            }
+            
+            // 儲存 PDF
+            doc.save('學習歷程檔案.pdf');
         }
 
         document.getElementById('class-name').addEventListener('input', function(e) {
