@@ -788,74 +788,27 @@
             }
         });
 
-        // 即時更新文字
-        document.getElementById('text1').addEventListener('input', function(e) {
-            const text = e.target.value;
-            const counter = this.nextElementSibling;
-            
-            // 更新字數計數
-            counter.textContent = `${text.length}/90`;
-            
-            // 限制輸入不超過90個字
-            if (text.length > 90) {
-                e.target.value = text.slice(0, 90);
-                return;
-            }
-            
-            // 直接更新顯示的文字，不做換行處理
-            document.querySelector('.text-overlay.top#text1').textContent = text;
-        });
+        function addTextInputHandler(textareaId, overlaySelector, maxLength) {
+            const textarea = document.getElementById(textareaId);
+            if (!textarea) return;
 
-        document.getElementById('text2').addEventListener('input', function(e) {
-            const text = e.target.value;
-            const counter = this.nextElementSibling;
-            
-            // 更新字數計數
-            counter.textContent = `${text.length}/130`;
-            
-            // 限制輸入不超過130個字
-            if (text.length > 130) {
-                e.target.value = text.slice(0, 130);
-                return;
-            }
-            
-            // 更新顯示的文字
-            document.querySelector('.text-overlay.bottom#text2').textContent = text;
-        });
+            textarea.addEventListener('input', function (e) {
+                let text = e.target.value;
+                if (text.length > maxLength) {
+                    text = text.slice(0, maxLength);
+                    e.target.value = text;
+                }
 
-        document.getElementById('text3').addEventListener('input', function(e) {
-            const text = e.target.value;
-            const counter = this.nextElementSibling;
-            
-            // 更新字數計數
-            counter.textContent = `${text.length}/130`;
-            
-            // 限制輸入不超過130個字
-            if (text.length > 130) {
-                e.target.value = text.slice(0, 130);
-                return;
-            }
-            
-            // 更新顯示的文字
-            document.querySelector('.text-overlay.top#text3').textContent = text;
-        });
+                const counter = this.nextElementSibling;
+                counter.textContent = `${text.length}/${maxLength}`;
+                document.querySelector(overlaySelector).textContent = text;
+            });
+        }
 
-        document.getElementById('text4').addEventListener('input', function(e) {
-            const text = e.target.value;
-            const counter = this.nextElementSibling;
-            
-            // 更新字數計數
-            counter.textContent = `${text.length}/130`;
-            
-            // 限制輸入不超過130個字
-            if (text.length > 130) {
-                e.target.value = text.slice(0, 130);
-                return;
-            }
-            
-            // 更新顯示的文字
-            document.querySelector('.text-overlay.bottom#text4').textContent = text;
-        });
+        addTextInputHandler('text1', '.text-overlay.top#text1', 90);
+        addTextInputHandler('text2', '.text-overlay.bottom#text2', 130);
+        addTextInputHandler('text3', '.text-overlay.top#text3', 130);
+        addTextInputHandler('text4', '.text-overlay.bottom#text4', 130);
 
         // 即時更新副標題和字數計數
         document.querySelectorAll('input[maxlength]').forEach(input => {
